@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Under the Microscope</title>
+  <meta name="description" content="A register of technical notes — systems, backend, AI, and the occasional book.">
+  <!-- Keeps this out of search results without making it private — it's a
+       personal archive, not something meant to be discovered. Remove this
+       tag if you ever do want it indexed. -->
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="masthead">
+      <div class="masthead__brand">
+        <svg class="reticle" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="12" cy="12" r="7.5" stroke-width="1.6"/>
+          <line x1="12" y1="1.5" x2="12" y2="5.5" stroke-width="1.6"/>
+          <line x1="12" y1="18.5" x2="12" y2="22.5" stroke-width="1.6"/>
+          <line x1="1.5" y1="12" x2="5.5" y2="12" stroke-width="1.6"/>
+          <line x1="18.5" y1="12" x2="22.5" y2="12" stroke-width="1.6"/>
+        </svg>
+        <h1 class="masthead__title">Under the Microscope</h1>
+      </div>
+      <p class="masthead__sub">A register of technical notes — systems, backend, AI, biology, and the occasional book.</p>
+      <div class="masthead__stats" id="masthead-stats"><span>Loading&hellip;</span></div>
+    </header>
+
+    <div class="filters">
+      <div class="filters__pills" id="category-pills" role="group" aria-label="Filter by category"></div>
+      <div class="filters__row2">
+        <input type="search" id="search-input" class="search-input" placeholder="Search entries&hellip;" aria-label="Search entries">
+        <div class="active-tag-note" id="active-tag-note"></div>
+      </div>
+    </div>
+
+    <section class="register" id="register-list" aria-label="Register of entries">
+      <div class="register__empty">Loading&hellip;</div>
+    </section>
+
+    <footer class="colophon">
+      <div class="colophon__row">
+        <span>Under the Microscope — a personal register, not a publication.</span>
+        <span><a href="feed.xml">RSS</a></span>
+      </div>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+  <script>renderFeed();</script>
+</body>
+</html>
