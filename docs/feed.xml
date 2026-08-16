@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+  <title>Under the Microscope</title>
+  <link>https://your-username.github.io/your-repo/index.html</link>
+  <description>A register of technical notes.</description>
+  <language>en-us</language>
+  <lastBuildDate>Sun, 02 Aug 2026 00:00:00 GMT</lastBuildDate>
+  <item>
+    <title>What I Wish I Knew Before My First System Design Interview</title>
+    <link>https://your-username.github.io/your-repo/post.html?slug=before-my-first-system-design-interview</link>
+    <guid isPermaLink="true">https://your-username.github.io/your-repo/post.html?slug=before-my-first-system-design-interview</guid>
+    <pubDate>Sun, 02 Aug 2026 00:00:00 GMT</pubDate>
+    <category>Career</category>
+    <description>Nobody is grading you on knowing the right answer. They&apos;re grading you on what you ask before giving one.</description>
+  </item>
+  <item>
+    <title>Reading &quot;The Pragmatic Programmer&quot; — Notes</title>
+    <link>https://your-username.github.io/your-repo/post.html?slug=pragmatic-programmer-notes</link>
+    <guid isPermaLink="true">https://your-username.github.io/your-repo/post.html?slug=pragmatic-programmer-notes</guid>
+    <pubDate>Sat, 25 Jul 2026 00:00:00 GMT</pubDate>
+    <category>Book Notes</category>
+    <description>The parts that were obvious in hindsight, and the one that wasn&apos;t.</description>
+  </item>
+  <item>
+    <title>Why Redis Is Fast</title>
+    <link>https://your-username.github.io/your-repo/post.html?slug=why-redis-is-fast</link>
+    <guid isPermaLink="true">https://your-username.github.io/your-repo/post.html?slug=why-redis-is-fast</guid>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+    <category>Systems</category>
+    <description>It&apos;s not the language it&apos;s written in. It&apos;s what it refuses to do.</description>
+  </item>
+</channel>
+</rss>

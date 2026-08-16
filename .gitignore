@@ -1,0 +1,5 @@
+# Drafts are local-only by design — they should never be committed,
+# since docs/ (the deployed folder) must only ever contain what's meant
+# to be public. Delete this line if you actually want to version-control
+# your drafts (e.g. to sync them across machines via a private repo).
+admin/drafts.json
