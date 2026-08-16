@@ -1,0 +1,25 @@
+name: Keep Supabase project awake
+
+# Supabase pauses free-tier projects after about a week with no
+# activity. This runs a trivial read against the categories table every
+# few days — enough to count as activity, cheap enough that it will
+# never come close to the free tier's request limits.
+
+on:
+  schedule:
+    - cron: '0 6 */3 * *'  # every 3 days at 06:00 UTC
+  workflow_dispatch:        # lets you trigger it manually from the Actions tab
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          curl -s -o /dev/null -w "Supabase ping: HTTP %{http_code}\n" \
+            "$SUPABASE_URL/rest/v1/categories?select=name&limit=1" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY"
