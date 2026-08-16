@@ -57,7 +57,7 @@ const AdminData = (() => {
       category: row.category,
       tags: row.tags || [],
       excerpt: row.excerpt,
-      bodyMd: row.body_md,
+      body: row.body_html,
       status: row.status
     });
 

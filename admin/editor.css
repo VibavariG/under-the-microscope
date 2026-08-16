@@ -192,12 +192,6 @@ a { color: var(--accent); }
 .field--full { grid-column: 1 / -1; }
 .field small { display: block; margin-top: 4px; font-size: 11px; color: var(--ink-faint); }
 
-.editor-split {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 18px;
-}
 .editor-pane label {
   display: block;
   font-family: var(--mono);
@@ -228,37 +222,66 @@ a { color: var(--accent); }
 }
 .md-toolbar button:hover { border-color: var(--accent); color: var(--accent); }
 .md-toolbar__sep { width: 1px; align-self: stretch; background: var(--line); margin: 2px 3px; }
-#body-input {
-  width: 100%;
-  min-height: 420px;
-  font-family: var(--mono);
-  font-size: 13.5px;
-  line-height: 1.6;
-  padding: 14px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--panel);
-  color: var(--ink);
-  resize: vertical;
-}
-#body-input:focus { border-color: var(--accent); outline: none; }
 
-.preview {
+/* Matches docs/style.css's .post-content typography as closely as
+   possible so what you see while writing is what readers will see —
+   this area IS the preview, there's no separate one. */
+.post-content-editable {
+  width: 100%;
+  min-height: 60vh;
+  padding: 32px 40px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--panel);
-  padding: 16px 18px;
-  min-height: 420px;
-  max-height: 600px;
-  overflow-y: auto;
-  font-size: 14.5px;
+  font-family: var(--body);
+  font-size: 1.08rem;
+  line-height: 1.65;
+  color: var(--ink);
 }
-.preview h1, .preview h2, .preview h3, .preview h4 { font-family: var(--display); margin: 1em 0 0.4em; }
-.preview p { margin: 0 0 1em; }
-.preview code { font-family: var(--mono); background: var(--paper-panel); padding: 0.1em 0.35em; border-radius: 3px; }
-.preview pre { background: var(--ink); color: var(--paper); padding: 12px 14px; border-radius: 6px; overflow-x: auto; }
-.preview pre code { background: none; color: inherit; }
-.preview blockquote { border-left: 2px solid var(--accent); padding-left: 12px; color: var(--ink-dim); font-style: italic; margin: 1em 0; }
+.post-content-editable:focus { border-color: var(--accent); outline: none; }
+.post-content-editable:empty::before {
+  content: attr(data-placeholder);
+  color: var(--ink-faint);
+}
+.post-content-editable h1, .post-content-editable h2, .post-content-editable h3, .post-content-editable h4 {
+  font-family: var(--display);
+  font-weight: 600;
+  color: var(--ink);
+  margin: 1.8em 0 0.6em;
+}
+.post-content-editable h2 { font-size: 1.32rem; }
+.post-content-editable h3 { font-size: 1.15rem; }
+.post-content-editable p { margin: 0 0 1.3em; }
+.post-content-editable a { color: var(--accent); }
+.post-content-editable code {
+  font-family: var(--mono);
+  background: var(--paper-panel);
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+  font-size: 0.88em;
+  color: var(--accent);
+}
+.post-content-editable pre {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 16px 18px;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 0.9em;
+  margin: 0 0 1.4em;
+}
+.post-content-editable blockquote {
+  margin: 1.6em 0;
+  padding: 4px 0 4px 18px;
+  border-left: 2px solid var(--accent);
+  color: var(--ink-dim);
+  font-style: italic;
+}
+.post-content-editable ul, .post-content-editable ol { margin: 0 0 1.3em; padding-left: 1.3em; }
+.post-content-editable li { margin-bottom: 0.4em; }
+.post-content-editable img { max-width: 100%; border-radius: 4px; }
+.post-content-editable hr { border: none; border-top: 1px solid var(--line); margin: 2em 0; }
 
 .actions {
   display: flex;
@@ -293,5 +316,5 @@ a { color: var(--accent); }
   .layout { grid-template-columns: 1fr; }
   .sidebar { border-right: none; border-bottom: 1px solid var(--line); }
   .field-grid, .field-grid--secondary { grid-template-columns: 1fr; }
-  .editor-split { grid-template-columns: 1fr; }
+  .post-content-editable { padding: 20px; }
 }

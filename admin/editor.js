@@ -218,8 +218,7 @@ function newPost() {
   document.getElementById('category-input').value = state.categories[0] || '';
   document.getElementById('tags-input').value = '';
   document.getElementById('excerpt-input').value = '';
-  document.getElementById('body-input').value = '';
-  updatePreview();
+  document.getElementById('body-input').innerHTML = '';
   clearBanner();
   renderActionButtons();
   highlightActiveSidebarItem();
@@ -239,8 +238,7 @@ function loadIntoForm(post, type) {
   document.getElementById('category-input').value = post.category || state.categories[0] || '';
   document.getElementById('tags-input').value = (post.tags || []).join(', ');
   document.getElementById('excerpt-input').value = post.excerpt || '';
-  document.getElementById('body-input').value = post.bodyMd || '';
-  updatePreview();
+  document.getElementById('body-input').innerHTML = post.body || '';
   clearBanner();
   renderActionButtons();
   highlightActiveSidebarItem();
@@ -254,113 +252,60 @@ function collectFormData() {
   const tags = document.getElementById('tags-input').value
     .split(',').map(t => t.trim()).filter(Boolean);
   const excerpt = document.getElementById('excerpt-input').value.trim();
-  const bodyMd = document.getElementById('body-input').value;
-  const body = mdToHTML(bodyMd);
-  return { slug, title, date, category, tags, excerpt, bodyMd, body };
+  const body = document.getElementById('body-input').innerHTML;
+  return { slug, title, date, category, tags, excerpt, body };
 }
 
-function updatePreview() {
-  const md = document.getElementById('body-input').value;
-  document.getElementById('preview-pane').innerHTML = mdToHTML(md) || '<p style="color:var(--ink-faint)">Preview appears here as you write.</p>';
-}
+/* ---------------- formatting toolbar (WYSIWYG) ---------------- */
+/* The body field is a contenteditable styled to look exactly like a
+   published article — no separate preview needed. execCommand handles
+   native rich-text behavior (native undo included); the few things it
+   doesn't cover (inline code, code block) wrap the selection by hand. */
 
-/* ---------------- formatting toolbar ---------------- */
-
-function getBodyTextarea() {
+function getBodyEl() {
   return document.getElementById('body-input');
 }
 
-function insertViaUndoableEdit(text) {
-  const ta = getBodyTextarea();
-  const ok = document.execCommand('insertText', false, text);
-  if (!ok) {
-    const { selectionStart: start, selectionEnd: end, value } = ta;
-    ta.value = value.slice(0, start) + text + value.slice(end);
-    ta.setSelectionRange(start + text.length, start + text.length);
+function wrapSelectionWithTag(tagName) {
+  const sel = window.getSelection();
+  if (!sel.rangeCount) return;
+  const range = sel.getRangeAt(0);
+  const el = document.createElement(tagName);
+  try {
+    range.surroundContents(el);
+  } catch {
+    el.appendChild(range.extractContents());
+    range.insertNode(el);
   }
-}
-
-function wrapSelection(before, after, placeholder) {
-  const ta = getBodyTextarea();
-  const start = ta.selectionStart;
-  const end = ta.selectionEnd;
-  const selected = ta.value.slice(start, end) || placeholder;
-  ta.focus();
-  ta.setSelectionRange(start, end);
-  insertViaUndoableEdit(before + selected + after);
-  const selStart = start + before.length;
-  ta.setSelectionRange(selStart, selStart + selected.length);
-  updatePreview();
-}
-
-const LINE_PREFIX_PATTERN = /^(#{1,6}\s+|>\s?|[-*]\s+|\d+\.\s+)/;
-
-function stripLinePrefix(line) {
-  return line.replace(LINE_PREFIX_PATTERN, '');
-}
-
-function applyLinePrefix(makePrefix, isSameType) {
-  const ta = getBodyTextarea();
-  const start = ta.selectionStart;
-  const end = ta.selectionEnd;
-  const value = ta.value;
-  const lineStart = value.lastIndexOf('\n', start - 1) + 1;
-  let lineEnd = value.indexOf('\n', end);
-  if (lineEnd === -1) lineEnd = value.length;
-  const block = value.slice(lineStart, lineEnd);
-  const lines = block.length ? block.split('\n') : [''];
-
-  const allApplied = lines.every(line => line === '' || isSameType(line));
-  let n = 1;
-  const nextLines = lines.map(line => {
-    if (line === '') return line;
-    const stripped = stripLinePrefix(line);
-    if (allApplied) return stripped;
-    return makePrefix(n++) + stripped;
-  });
-  const nextBlock = nextLines.join('\n');
-
-  ta.focus();
-  ta.setSelectionRange(lineStart, lineEnd);
-  insertViaUndoableEdit(nextBlock);
-  ta.setSelectionRange(lineStart, lineStart + nextBlock.length);
-  updatePreview();
-}
-
-function insertLinkLike(openMarker, placeholder, urlPlaceholder) {
-  const ta = getBodyTextarea();
-  const start = ta.selectionStart;
-  const end = ta.selectionEnd;
-  const label = ta.value.slice(start, end) || placeholder;
-  ta.focus();
-  ta.setSelectionRange(start, end);
-  insertViaUndoableEdit(`${openMarker}${label}](${urlPlaceholder})`);
-  const urlStart = start + openMarker.length + label.length + 2;
-  ta.setSelectionRange(urlStart, urlStart + urlPlaceholder.length);
-  updatePreview();
-}
-
-function insertAtCursor(text) {
-  const ta = getBodyTextarea();
-  ta.focus();
-  insertViaUndoableEdit(text);
-  updatePreview();
+  sel.removeAllRanges();
+  const newRange = document.createRange();
+  newRange.selectNodeContents(el);
+  sel.addRange(newRange);
 }
 
 function applyMdFormat(action) {
+  getBodyEl().focus();
   switch (action) {
-    case 'bold': return wrapSelection('**', '**', 'bold text');
-    case 'italic': return wrapSelection('*', '*', 'italic text');
-    case 'code': return wrapSelection('`', '`', 'code');
-    case 'codeblock': return wrapSelection('```\n', '\n```', 'code here');
-    case 'h2': return applyLinePrefix(() => '## ', line => /^##\s+/.test(line));
-    case 'h3': return applyLinePrefix(() => '### ', line => /^###\s+/.test(line));
-    case 'quote': return applyLinePrefix(() => '> ', line => /^>\s?/.test(line));
-    case 'ul': return applyLinePrefix(() => '- ', line => /^[-*]\s+/.test(line));
-    case 'ol': return applyLinePrefix(n => `${n}. `, line => /^\d+\.\s+/.test(line));
-    case 'link': return insertLinkLike('[', 'link text', 'https://');
-    case 'image': return insertLinkLike('![', 'alt text', 'https://');
-    case 'hr': return insertAtCursor('\n\n---\n\n');
+    case 'bold': return document.execCommand('bold');
+    case 'italic': return document.execCommand('italic');
+    case 'code': return wrapSelectionWithTag('code');
+    case 'codeblock': return wrapSelectionWithTag('pre');
+    case 'h2': return document.execCommand('formatBlock', false, 'h2');
+    case 'h3': return document.execCommand('formatBlock', false, 'h3');
+    case 'quote': return document.execCommand('formatBlock', false, 'blockquote');
+    case 'ul': return document.execCommand('insertUnorderedList');
+    case 'ol': return document.execCommand('insertOrderedList');
+    case 'hr': return document.execCommand('insertHorizontalRule');
+    case 'link': {
+      const url = prompt('Link URL:', 'https://');
+      if (url) document.execCommand('createLink', false, url);
+      return;
+    }
+    case 'image': {
+      const url = prompt('Image URL:', 'https://');
+      if (url) document.execCommand('insertImage', false, url);
+      return;
+    }
   }
 }
 
@@ -370,7 +315,7 @@ function wireToolbar() {
     if (!btn) return;
     applyMdFormat(btn.dataset.action);
   });
-  getBodyTextarea().addEventListener('keydown', (e) => {
+  getBodyEl().addEventListener('keydown', (e) => {
     const mod = e.metaKey || e.ctrlKey;
     if (!mod) return;
     if (e.key.toLowerCase() === 'b') { e.preventDefault(); applyMdFormat('bold'); }
@@ -555,7 +500,6 @@ function wireStaticControls() {
     }
   });
   document.getElementById('slug-input').addEventListener('input', () => { state.slugManuallyEdited = true; });
-  document.getElementById('body-input').addEventListener('input', updatePreview);
   document.getElementById('add-category-btn').addEventListener('click', addCategory);
   wireToolbar();
 }

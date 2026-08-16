@@ -29,6 +29,18 @@ function reticleSVG() {
   </svg>`;
 }
 
+// Assigns each category a color from the fixed specimen-label palette
+// (see :root in style.css), deterministically by name, so a category
+// always gets the same color without having to hardcode a list.
+const CATEGORY_PALETTE = ['--cat-teal', '--cat-amber', '--cat-rust', '--cat-indigo', '--cat-moss', '--cat-plum'];
+function categoryColor(name) {
+  if (!name) return null;
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = (hash << 5) - hash + name.charCodeAt(i);
+  const varName = CATEGORY_PALETTE[Math.abs(hash) % CATEGORY_PALETTE.length];
+  return `var(${varName})`;
+}
+
 function formatDate(iso) {
   // date-only, no time — accepts "YYYY-MM-DD" or a full ISO timestamp
   const d = new Date(iso.length === 10 ? iso + 'T00:00:00' : iso);
@@ -115,7 +127,8 @@ function renderPills(categories, filters) {
   const all = ['All', ...categories];
   pillsEl.innerHTML = all.map(cat => {
     const active = cat === filters.category;
-    return `<button class="pill" type="button" data-category="${escapeHTML(cat)}" aria-pressed="${active}">${escapeHTML(cat)}</button>`;
+    const color = cat === 'All' ? null : categoryColor(cat);
+    return `<button class="pill" type="button" data-category="${escapeHTML(cat)}" aria-pressed="${active}"${color ? ` style="--cat-color:${color}"` : ''}>${escapeHTML(cat)}</button>`;
   }).join('');
   pillsEl.querySelectorAll('.pill').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -141,8 +154,9 @@ function renderEntries(posts) {
     const tags = (post.tags || []).map(t =>
       `<a class="tag-chip" href="index.html?tag=${encodeURIComponent(t)}" data-tag="${escapeHTML(t)}">#${escapeHTML(t)}</a>`
     ).join('');
+    const color = categoryColor(post.category);
     return `
-      <div class="entry">
+      <div class="entry"${color ? ` style="--cat-color:${color}"` : ''}>
         <a class="entry__link" href="post.html?slug=${encodeURIComponent(post.slug)}">
           <div class="entry__meta-row">
             ${reticleSVG()}
@@ -249,9 +263,10 @@ async function renderPost() {
     const tags = (post.tags || []).map(t =>
       `<a class="tag-chip" href="index.html?tag=${encodeURIComponent(t)}">#${escapeHTML(t)}</a>`
     ).join('');
+    const color = categoryColor(post.category);
 
     root.innerHTML = `
-      ${post.category ? `<div class="post-category">${reticleSVG()}<a href="index.html?category=${encodeURIComponent(post.category)}">${escapeHTML(post.category)}</a></div>` : ''}
+      ${post.category ? `<div class="post-category"${color ? ` style="--cat-color:${color}"` : ''}>${reticleSVG()}<a href="index.html?category=${encodeURIComponent(post.category)}">${escapeHTML(post.category)}</a></div>` : ''}
       <h1 class="post-title">${escapeHTML(post.title)}</h1>
       <div class="post-meta"><span>${formatDate(post.date)}</span></div>
       <div class="post-content">${post.body || ''}</div>

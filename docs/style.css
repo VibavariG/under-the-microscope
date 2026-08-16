@@ -11,6 +11,7 @@
      Amber is used only as a rare secondary touch (tag hover). */
   --paper:        #F5F6F1;
   --paper-panel:  #ECEDE6;
+  --card:         #FEFEFB;
   --ink:          #1C2321;
   --ink-dim:      #57615C;
   --ink-faint:    #8B9289;
@@ -18,6 +19,17 @@
   --accent:       #146B62;
   --accent-wash:  #E1EEEA;
   --amber:        #B4652B;
+
+  /* Specimen-label palette — each category gets one of these, assigned
+     deterministically by name (see script.js categoryColor()), so the
+     register reads like color-coded catalog cards instead of one flat
+     accent everywhere. */
+  --cat-teal:   #146B62;
+  --cat-amber:  #B4652B;
+  --cat-rust:   #A34430;
+  --cat-indigo: #33518C;
+  --cat-moss:   #6B7A3A;
+  --cat-plum:   #7A3B5E;
 
   --display: 'Space Grotesk', sans-serif;
   --body: 'Lora', Georgia, serif;
@@ -68,7 +80,13 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 
 /* ---------------- Masthead ---------------- */
 
-.masthead { padding: 56px 0 28px; border-bottom: 1px solid var(--line); }
+.masthead {
+  padding: 56px 0 28px;
+  border-bottom: 1px solid var(--line);
+  background-image: radial-gradient(var(--line) 1px, transparent 1px);
+  background-size: 18px 18px;
+  background-position: -9px -9px;
+}
 
 .masthead__brand {
   display: flex;
@@ -76,7 +94,8 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   gap: 10px;
   color: var(--accent);
 }
-.masthead__brand .reticle { width: 22px; height: 22px; }
+.masthead__brand .reticle { width: 22px; height: 22px; transition: transform 0.4s ease; }
+.masthead__brand:hover .reticle { transform: rotate(90deg); }
 
 .masthead__title {
   font-family: var(--display);
@@ -141,11 +160,11 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   cursor: pointer;
   transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
 }
-.pill:hover { border-color: var(--accent); color: var(--ink); }
+.pill:hover { border-color: var(--cat-color, var(--accent)); color: var(--ink); }
 .pill[aria-pressed="true"] {
-  background: var(--accent-wash);
-  border-color: var(--accent);
-  color: var(--accent);
+  background: color-mix(in srgb, var(--cat-color, var(--accent)) 14%, var(--paper));
+  border-color: var(--cat-color, var(--accent));
+  color: var(--cat-color, var(--accent));
 }
 
 .filters__row2 {
@@ -190,11 +209,21 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 
 /* ---------------- Register (feed list) ---------------- */
 
-.register { padding: 8px 0 80px; }
+.register { padding: 16px 0 80px; }
 
 .entry {
-  padding: 26px 0;
-  border-bottom: 1px solid var(--line);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--cat-color, var(--accent));
+  border-radius: 10px;
+  padding: 22px 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 2px rgba(28, 35, 33, 0.05);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.entry:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(28, 35, 33, 0.1);
 }
 
 .entry__link {
@@ -202,7 +231,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   text-decoration: none;
   color: inherit;
 }
-.entry__link:hover .entry__title { color: var(--accent); }
+.entry__link:hover .entry__title { color: var(--cat-color, var(--accent)); }
 .entry__link:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }
 
 .entry__meta-row {
@@ -216,11 +245,11 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   align-items: center;
   gap: 8px;
 }
-.entry__meta-row .reticle { color: var(--accent); }
+.entry__meta-row .reticle { color: var(--cat-color, var(--accent)); }
 .entry__category {
-  color: var(--accent);
-  border: 1px solid var(--accent-wash);
-  background: var(--accent-wash);
+  color: var(--cat-color, var(--accent));
+  border: 1px solid color-mix(in srgb, var(--cat-color, var(--accent)) 30%, transparent);
+  background: color-mix(in srgb, var(--cat-color, var(--accent)) 12%, var(--card));
   padding: 2px 8px;
   border-radius: 999px;
   font-size: 11px;
@@ -254,8 +283,10 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   border-radius: 999px;
   text-decoration: none;
   line-height: 1.7;
+  display: inline-block;
+  transition: transform 0.12s ease, color 0.12s ease, border-color 0.12s ease;
 }
-.tag-chip:hover { border-color: var(--amber); color: var(--amber); }
+.tag-chip:hover { border-color: var(--amber); color: var(--amber); transform: translateY(-1px); }
 
 .register__empty {
   padding: 60px 0;
@@ -284,7 +315,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
   font-size: 12px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--cat-color, var(--accent));
   margin-bottom: 10px;
 }
 .post-category .reticle { width: 12px; height: 12px; }

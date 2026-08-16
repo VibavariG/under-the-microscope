@@ -80,31 +80,25 @@
           </div>
         </div>
 
-        <div class="editor-split">
-          <div class="editor-pane">
-            <label for="body-input">Body</label>
-            <div class="md-toolbar" id="md-toolbar">
-              <button type="button" data-action="bold" title="Bold (Ctrl/Cmd+B)"><strong>B</strong></button>
-              <button type="button" data-action="italic" title="Italic (Ctrl/Cmd+I)"><em>I</em></button>
-              <button type="button" data-action="code" title="Inline code">&lt;/&gt;</button>
-              <span class="md-toolbar__sep"></span>
-              <button type="button" data-action="h2" title="Heading">H2</button>
-              <button type="button" data-action="h3" title="Subheading">H3</button>
-              <span class="md-toolbar__sep"></span>
-              <button type="button" data-action="link" title="Link">Link</button>
-              <button type="button" data-action="image" title="Image">Image</button>
-              <button type="button" data-action="quote" title="Quote">Quote</button>
-              <button type="button" data-action="ul" title="Bulleted list">&bull; List</button>
-              <button type="button" data-action="ol" title="Numbered list">1. List</button>
-              <button type="button" data-action="codeblock" title="Code block">Code block</button>
-              <button type="button" data-action="hr" title="Divider">Divider</button>
-            </div>
-            <textarea id="body-input" placeholder="Use the toolbar above, or write Markdown directly."></textarea>
+        <div class="editor-pane">
+          <label for="body-input">Body</label>
+          <div class="md-toolbar" id="md-toolbar">
+            <button type="button" data-action="bold" title="Bold (Ctrl/Cmd+B)"><strong>B</strong></button>
+            <button type="button" data-action="italic" title="Italic (Ctrl/Cmd+I)"><em>I</em></button>
+            <button type="button" data-action="code" title="Inline code">&lt;/&gt;</button>
+            <span class="md-toolbar__sep"></span>
+            <button type="button" data-action="h2" title="Heading">H2</button>
+            <button type="button" data-action="h3" title="Subheading">H3</button>
+            <span class="md-toolbar__sep"></span>
+            <button type="button" data-action="link" title="Link">Link</button>
+            <button type="button" data-action="image" title="Image">Image</button>
+            <button type="button" data-action="quote" title="Quote">Quote</button>
+            <button type="button" data-action="ul" title="Bulleted list">&bull; List</button>
+            <button type="button" data-action="ol" title="Numbered list">1. List</button>
+            <button type="button" data-action="codeblock" title="Code block">Code block</button>
+            <button type="button" data-action="hr" title="Divider">Divider</button>
           </div>
-          <div class="editor-pane">
-            <label>Preview</label>
-            <div class="preview" id="preview-pane"></div>
-          </div>
+          <div id="body-input" class="post-content-editable" contenteditable="true" data-placeholder="Write here — it looks exactly like the published article as you type."></div>
         </div>
 
         <div class="actions" id="actions"></div>
@@ -114,7 +108,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="config.js"></script>
-  <script src="markdown.js"></script>
   <script src="supabase-client.js"></script>
   <script src="editor.js"></script>
 </body>
