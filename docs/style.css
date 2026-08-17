@@ -209,21 +209,11 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 
 /* ---------------- Register (feed list) ---------------- */
 
-.register { padding: 16px 0 80px; }
+.register { padding: 8px 0 80px; }
 
 .entry {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-left: 4px solid var(--cat-color, var(--accent));
-  border-radius: 10px;
-  padding: 22px 24px;
-  margin-bottom: 16px;
-  box-shadow: 0 1px 2px rgba(28, 35, 33, 0.05);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-.entry:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 22px rgba(28, 35, 33, 0.1);
+  padding: 26px 0;
+  border-bottom: 1px solid var(--line);
 }
 
 .entry__link {
@@ -386,6 +376,31 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 .post-content li { margin-bottom: 0.4em; }
 .post-content img { max-width: 100%; border-radius: 4px; }
 .post-content hr { border: none; border-top: 1px solid var(--line); margin: 2em 0; }
+
+.post-content .callout {
+  margin: 1.6em 0;
+  padding: 14px 18px;
+  border-radius: 6px;
+  border-left: 3px solid var(--accent);
+  background: var(--paper-panel);
+}
+.post-content .callout p { margin: 0 0 0.6em; }
+.post-content .callout p:last-child { margin-bottom: 0; }
+.post-content .callout__label {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0 0 6px;
+}
+.post-content .callout--observation { border-left-color: var(--accent); }
+.post-content .callout--observation .callout__label { color: var(--accent); }
+.post-content .callout--experiment { border-left-color: var(--amber); }
+.post-content .callout--experiment .callout__label { color: var(--amber); }
+.post-content .callout--takeaway { border-left: none; background: var(--ink); }
+.post-content .callout--takeaway .callout__label { color: var(--paper); opacity: 0.65; }
+.post-content .callout--takeaway p { color: var(--paper); }
 
 .post-tags {
   display: flex;

@@ -283,6 +283,27 @@ function wrapSelectionWithTag(tagName) {
   sel.addRange(newRange);
 }
 
+// Inserts a styled callout block and selects its placeholder text so
+// typing immediately replaces it, same pattern as the old markdown
+// placeholder-select behavior.
+function insertCallout(type, label) {
+  const el = getBodyEl();
+  el.focus();
+  const html = `<div class="callout callout--${type}"><p class="callout__label">${label}</p><p>Write here\u2026</p></div><p><br></p>`;
+  document.execCommand('insertHTML', false, html);
+
+  const matches = el.querySelectorAll(`.callout--${type}`);
+  const last = matches[matches.length - 1];
+  const bodyPara = last && last.querySelector('p:last-child');
+  if (bodyPara) {
+    const range = document.createRange();
+    range.selectNodeContents(bodyPara);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  }
+}
+
 function applyMdFormat(action) {
   getBodyEl().focus();
   switch (action) {
@@ -296,6 +317,9 @@ function applyMdFormat(action) {
     case 'ul': return document.execCommand('insertUnorderedList');
     case 'ol': return document.execCommand('insertOrderedList');
     case 'hr': return document.execCommand('insertHorizontalRule');
+    case 'callout-observation': return insertCallout('observation', 'Observation');
+    case 'callout-experiment': return insertCallout('experiment', 'Experiment');
+    case 'callout-takeaway': return insertCallout('takeaway', 'Takeaway');
     case 'link': {
       const url = prompt('Link URL:', 'https://');
       if (url) document.execCommand('createLink', false, url);

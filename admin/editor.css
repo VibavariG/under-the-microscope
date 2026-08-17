@@ -283,6 +283,31 @@ a { color: var(--accent); }
 .post-content-editable img { max-width: 100%; border-radius: 4px; }
 .post-content-editable hr { border: none; border-top: 1px solid var(--line); margin: 2em 0; }
 
+.post-content-editable .callout {
+  margin: 1.6em 0;
+  padding: 14px 18px;
+  border-radius: 6px;
+  border-left: 3px solid var(--accent);
+  background: var(--paper-panel);
+}
+.post-content-editable .callout p { margin: 0 0 0.6em; }
+.post-content-editable .callout p:last-child { margin-bottom: 0; }
+.post-content-editable .callout__label {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0 0 6px;
+}
+.post-content-editable .callout--observation { border-left-color: var(--accent); }
+.post-content-editable .callout--observation .callout__label { color: var(--accent); }
+.post-content-editable .callout--experiment { border-left-color: var(--amber); }
+.post-content-editable .callout--experiment .callout__label { color: var(--amber); }
+.post-content-editable .callout--takeaway { border-left: none; background: var(--ink); }
+.post-content-editable .callout--takeaway .callout__label { color: var(--paper); opacity: 0.65; }
+.post-content-editable .callout--takeaway p { color: var(--paper); }
+
 .actions {
   display: flex;
   gap: 10px;
