@@ -327,7 +327,12 @@ function applyMdFormat(action) {
     }
     case 'image': {
       const url = prompt('Image URL:', 'https://');
-      if (url) document.execCommand('insertImage', false, url);
+      if (!url) return;
+      const alt = prompt('Describe the image (for screen readers):', '') || '';
+      document.execCommand('insertImage', false, url);
+      const imgs = getBodyEl().querySelectorAll(`img[src="${CSS.escape(url)}"]`);
+      const last = imgs[imgs.length - 1];
+      if (last) last.setAttribute('alt', alt);
       return;
     }
   }

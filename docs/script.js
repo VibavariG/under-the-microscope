@@ -52,8 +52,7 @@ function stripTags(html) {
 }
 
 // Maps a database row (snake_case) to the shape the rest of this file
-// already expects (kept identical to the old API response shape so
-// none of the rendering code below had to change).
+// already expects.
 function toPost(row) {
   return {
     slug: row.slug,
@@ -231,6 +230,17 @@ async function renderFeed() {
 
 /* ---------------- Single post (post.html) ---------------- */
 
+function buildPostNavHTML(older, newer) {
+  if (!older && !newer) return '';
+  const prevLink = older
+    ? `<a class="post-nav__link post-nav__link--prev" href="post.html?slug=${encodeURIComponent(older.slug)}"><span class="post-nav__label">&larr; Previous</span><span class="post-nav__title">${escapeHTML(older.title)}</span></a>`
+    : '<span></span>';
+  const nextLink = newer
+    ? `<a class="post-nav__link post-nav__link--next" href="post.html?slug=${encodeURIComponent(newer.slug)}"><span class="post-nav__label">Next &rarr;</span><span class="post-nav__title">${escapeHTML(newer.title)}</span></a>`
+    : '<span></span>';
+  return `<nav class="post-nav" aria-label="More notes">${prevLink}${nextLink}</nav>`;
+}
+
 async function renderPost() {
   const params = new URLSearchParams(window.location.search);
   const slug = params.get('slug');
@@ -265,6 +275,20 @@ async function renderPost() {
     ).join('');
     const color = categoryColor(post.category);
 
+    // Prev/next: reuses the full published list (fine at personal-blog
+    // scale) sorted newest-first, so the entry immediately before the
+    // current one in that array is newer, and the one after is older.
+    let postNavHTML = '';
+    try {
+      const siblings = await loadPosts();
+      const idx = siblings.findIndex(p => p.slug === post.slug);
+      const newer = idx > 0 ? siblings[idx - 1] : null;
+      const older = idx > -1 && idx < siblings.length - 1 ? siblings[idx + 1] : null;
+      postNavHTML = buildPostNavHTML(older, newer);
+    } catch {
+      postNavHTML = ''; // prev/next is a nice-to-have — never block the post itself on it
+    }
+
     root.innerHTML = `
       ${post.category ? `<div class="post-category"${color ? ` style="--cat-color:${color}"` : ''}>${reticleSVG()}<a href="index.html?category=${encodeURIComponent(post.category)}">${escapeHTML(post.category)}</a></div>` : ''}
       <h1 class="post-title">${escapeHTML(post.title)}</h1>
@@ -275,6 +299,7 @@ async function renderPost() {
         <span class="share__label">Share this entry</span>
         <button class="share__btn" id="copy-link-btn" type="button">Copy link</button>
       </div>
+      ${postNavHTML}
     `;
 
     const btn = document.getElementById('copy-link-btn');
