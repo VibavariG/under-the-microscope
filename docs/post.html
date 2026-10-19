@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="reading-progress" id="reading-progress" aria-hidden="true"></div>
   <nav class="site-nav">
     <div class="wrap site-nav__inner">
       <a class="site-nav__brand" href="index.html">
@@ -47,5 +48,19 @@
   <script src="script.js"></script>
   <script src="nav.js"></script>
   <script>renderPost();</script>
+  <script>
+    // Reading progress bar — fills as the reader scrolls the article.
+    (function () {
+      var bar = document.getElementById('reading-progress');
+      function update() {
+        var el = document.documentElement;
+        var max = el.scrollHeight - el.clientHeight;
+        bar.style.width = (max > 0 ? (el.scrollTop / max) * 100 : 0) + '%';
+      }
+      document.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update);
+      update();
+    })();
+  </script>
 </body>
 </html>

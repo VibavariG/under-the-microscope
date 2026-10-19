@@ -3,15 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Under the Microscope — Admin</title>
+  <title>Under the Microscope — Studio</title>
   <link rel="stylesheet" href="editor.css">
 </head>
 <body>
   <div class="topbar">
-    <h3 class="topbar__title">Under the Microscope <span>ADMIN</span></h3>
+    <h3 class="topbar__title">
+      <svg class="reticle" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="12" cy="12" r="7.5" stroke-width="1.6"/>
+        <line x1="12" y1="1.5" x2="12" y2="5.5" stroke-width="1.6"/>
+        <line x1="12" y1="18.5" x2="12" y2="22.5" stroke-width="1.6"/>
+        <line x1="1.5" y1="12" x2="5.5" y2="12" stroke-width="1.6"/>
+        <line x1="18.5" y1="12" x2="22.5" y2="12" stroke-width="1.6"/>
+      </svg>
+      Under the Microscope <span>STUDIO</span>
+    </h3>
     <div class="topbar__status">
+      <span class="word-count" id="word-count"></span>
       <span id="logged-in-as"></span>
-      <button class="btn" id="logout-btn" type="button">Log out</button>
+      <button class="btn btn--ghost" id="logout-btn" type="button">Log out</button>
     </div>
   </div>
 
@@ -32,80 +42,82 @@
       <div class="banner" id="banner" style="display:none;"></div>
 
       <div class="empty-state" id="empty-state" style="display:none;">
-        <h2>Nothing here yet</h2>
-        <p>Click "+ New entry" to write your first post.</p>
+        <h2>Nothing open</h2>
+        <p>Pick an entry on the left, or start a new one.</p>
       </div>
 
       <form class="editor-form" id="editor-form" style="display:none;" onsubmit="return false;">
-        <div class="field-grid">
-          <div class="field field--full">
-            <label for="title-input">Title</label>
-            <input type="text" id="title-input" placeholder="Why Kafka Uses Partitions">
-          </div>
-        </div>
-
-        <div class="field-grid field-grid--secondary">
-          <div class="field">
-            <label for="slug-input">Slug</label>
-            <input type="text" id="slug-input" placeholder="why-kafka-uses-partitions">
-            <small>Used in the URL. Auto-filled from the title until you edit it directly.</small>
-          </div>
-          <div class="field">
-            <label for="date-input">Date</label>
-            <input type="date" id="date-input">
-          </div>
-        </div>
-
-        <div class="field-grid field-grid--secondary">
-          <div class="field">
-            <label for="category-input">Category</label>
-            <select id="category-input"></select>
-            <div style="display:flex; gap:6px; margin-top:6px;">
-              <input type="text" id="new-category-input" placeholder="Add a new category" style="flex:1; padding:6px 8px; font-size:12px;">
-              <button type="button" class="btn" id="add-category-btn" style="padding:6px 10px; font-size:11.5px;">Add</button>
+        <div class="editor-grid">
+          <section class="sheet">
+            <div class="field field--title">
+              <input type="text" id="title-input" placeholder="Give it a title…" aria-label="Title">
             </div>
-            <div id="category-chip-list" class="category-chip-list"></div>
-          </div>
-          <div class="field">
-            <label for="tags-input">Tags</label>
-            <input type="text" id="tags-input" placeholder="kafka, partitions, distributed-systems">
-            <small>Comma-separated.</small>
-          </div>
-        </div>
 
-        <div class="field-grid">
-          <div class="field field--full">
-            <label for="excerpt-input">Excerpt</label>
-            <textarea id="excerpt-input" rows="2" placeholder="One line shown under the title in the feed."></textarea>
-          </div>
-        </div>
+            <div class="editor-pane">
+              <div class="md-toolbar" id="md-toolbar">
+                <button type="button" data-action="bold" title="Bold (Ctrl/Cmd+B)"><strong>B</strong></button>
+                <button type="button" data-action="italic" title="Italic (Ctrl/Cmd+I)"><em>I</em></button>
+                <button type="button" data-action="code" title="Inline code">&lt;/&gt;</button>
+                <span class="md-toolbar__sep"></span>
+                <button type="button" data-action="h2" title="Heading">H2</button>
+                <button type="button" data-action="h3" title="Subheading">H3</button>
+                <span class="md-toolbar__sep"></span>
+                <button type="button" data-action="link" title="Link">Link</button>
+                <button type="button" data-action="image" title="Image">Image</button>
+                <button type="button" data-action="quote" title="Quote">Quote</button>
+                <button type="button" data-action="ul" title="Bulleted list">&bull; List</button>
+                <button type="button" data-action="ol" title="Numbered list">1. List</button>
+                <button type="button" data-action="codeblock" title="Code block">Code block</button>
+                <button type="button" data-action="hr" title="Divider">Divider</button>
+                <span class="md-toolbar__sep"></span>
+                <button type="button" data-action="callout-observation" title="Observation callout">Observation</button>
+                <button type="button" data-action="callout-experiment" title="Experiment callout">Experiment</button>
+                <button type="button" data-action="callout-takeaway" title="Takeaway callout">Takeaway</button>
+              </div>
+              <div id="body-input" class="post-content-editable" contenteditable="true" data-placeholder="Start writing — this canvas is exactly what your readers will see."></div>
+            </div>
+          </section>
 
-        <div class="editor-pane">
-          <label for="body-input">Body</label>
-          <div class="md-toolbar" id="md-toolbar">
-            <button type="button" data-action="bold" title="Bold (Ctrl/Cmd+B)"><strong>B</strong></button>
-            <button type="button" data-action="italic" title="Italic (Ctrl/Cmd+I)"><em>I</em></button>
-            <button type="button" data-action="code" title="Inline code">&lt;/&gt;</button>
-            <span class="md-toolbar__sep"></span>
-            <button type="button" data-action="h2" title="Heading">H2</button>
-            <button type="button" data-action="h3" title="Subheading">H3</button>
-            <span class="md-toolbar__sep"></span>
-            <button type="button" data-action="link" title="Link">Link</button>
-            <button type="button" data-action="image" title="Image">Image</button>
-            <button type="button" data-action="quote" title="Quote">Quote</button>
-            <button type="button" data-action="ul" title="Bulleted list">&bull; List</button>
-            <button type="button" data-action="ol" title="Numbered list">1. List</button>
-            <button type="button" data-action="codeblock" title="Code block">Code block</button>
-            <button type="button" data-action="hr" title="Divider">Divider</button>
-            <span class="md-toolbar__sep"></span>
-            <button type="button" data-action="callout-observation" title="Observation callout">Observation</button>
-            <button type="button" data-action="callout-experiment" title="Experiment callout">Experiment</button>
-            <button type="button" data-action="callout-takeaway" title="Takeaway callout">Takeaway</button>
-          </div>
-          <div id="body-input" class="post-content-editable" contenteditable="true" data-placeholder="Write here — it looks exactly like the published article as you type."></div>
-        </div>
+          <aside class="inspector">
+            <div class="inspector__card">
+              <h4 class="inspector__title">Details</h4>
 
-        <div class="actions" id="actions"></div>
+              <div class="field">
+                <label for="slug-input">Slug</label>
+                <input type="text" id="slug-input" placeholder="why-kafka-uses-partitions">
+                <small>Used in the URL. Auto-filled from the title until you edit it directly.</small>
+              </div>
+
+              <div class="field">
+                <label for="date-input">Date</label>
+                <input type="date" id="date-input">
+              </div>
+
+              <div class="field">
+                <label for="category-input">Category</label>
+                <select id="category-input"></select>
+                <div class="add-cat-row">
+                  <input type="text" id="new-category-input" placeholder="Add a new category">
+                  <button type="button" class="btn btn--small" id="add-category-btn">Add</button>
+                </div>
+                <div id="category-chip-list" class="category-chip-list"></div>
+              </div>
+
+              <div class="field">
+                <label for="tags-input">Tags</label>
+                <input type="text" id="tags-input" placeholder="kafka, partitions, distributed-systems">
+                <small>Comma-separated.</small>
+              </div>
+
+              <div class="field">
+                <label for="excerpt-input">Excerpt</label>
+                <textarea id="excerpt-input" rows="3" placeholder="One line shown under the title in the feed."></textarea>
+              </div>
+            </div>
+
+            <div class="actions" id="actions"></div>
+          </aside>
+        </div>
       </form>
     </main>
   </div>
@@ -114,5 +126,22 @@
   <script src="config.js"></script>
   <script src="supabase-client.js"></script>
   <script src="editor.js"></script>
+  <script>
+    // Live word count + reading time in the top bar. Watches the canvas
+    // (editor.js sets innerHTML when a post loads; typing fires input).
+    (function () {
+      var out = document.getElementById('word-count');
+      var body = document.getElementById('body-input');
+      function update() {
+        var words = (body.textContent || '').trim().split(/\s+/).filter(Boolean).length;
+        if (!words) { out.textContent = ''; return; }
+        var mins = Math.max(1, Math.round(words / 200));
+        out.textContent = words.toLocaleString() + ' words · ' + mins + ' min read';
+      }
+      body.addEventListener('input', update);
+      new MutationObserver(update).observe(body, { childList: true, characterData: true, subtree: true });
+      update();
+    })();
+  </script>
 </body>
 </html>

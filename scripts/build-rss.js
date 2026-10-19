@@ -17,7 +17,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const SITE_URL = 'https://your-username.github.io/your-repo'; // <-- edit me
+const SITE_URL = 'https://vibavarig.github.io/under-the-microscope';
 
 const root = path.join(__dirname, '..');
 const posts = JSON.parse(fs.readFileSync(path.join(root, 'docs', 'posts.json'), 'utf8'));
